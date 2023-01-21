@@ -14,6 +14,8 @@ import { ValidationPipe } from '@nestjs/common/pipes';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ClassGroupService } from 'src/ClassGroup/service/ClassGroup.service';
 import { ProgrammingLanguageVO } from 'src/ProgrammingLanguage/vo/ProgrammingLanguage.vo';
+import { User } from 'src/User/entities/User.entity';
+import { GetUser } from 'src/User/service/GetUser';
 import { UserService } from 'src/User/service/User.service';
 import { CreateTaskDTO } from '../dto/CreateTask.dto';
 import { EditClassDTO } from '../dto/EditTask.dto';
@@ -31,16 +33,11 @@ export class TaskController {
   ) {}
 
   @Get('/todo')
-  async findToDo(
-    @Query('userId') userId: number,
+  async findTaskPendingTasks(
     @Query('classId') classId: string,
+    @GetUser() user:User
   ): Promise<TaskBasicInformationVO[]> {
-    const findUser = await this.userService.findById(userId);
     const findClassGroup = await this.classGroupService.findById(classId);
-
-    if (!findUser) {
-      throw new NotFoundException(`There is not a user with the id: ${userId}`);
-    }
 
     if (!findClassGroup) {
       throw new NotFoundException(
@@ -48,7 +45,7 @@ export class TaskController {
       );
     }
 
-    const entityList = await this.taskService.findToDoTask(userId, classId);
+    const entityList = await this.taskService.findToDoTask(user.id, classId);
     const voList: TaskBasicInformationVO[] = [];
 
     entityList.map((entity) => {
