@@ -98,7 +98,6 @@ export class TaskDeliveryController {
       taskVO.taskDescription = entity.task.taskDescription;
       taskVO.maxScore = entity.task.maxScore;
       taskVO.limitDate = entity.task.limitDate;
-      taskVO.limitTime = entity.task.limitTime;
 
       taskDeliveryVO.user = userVO;
       taskDeliveryVO.task = taskVO;
@@ -143,7 +142,6 @@ export class TaskDeliveryController {
     taskVO.templateCode = findEntity.task.templateCode;
     taskVO.maxScore = findEntity.task.maxScore;
     taskVO.limitDate = findEntity.task.limitDate;
-    taskVO.limitTime = findEntity.task.limitTime;
 
     taskDeliveryVO.id = findEntity.id;
     taskDeliveryVO.user = userVO;
@@ -196,7 +194,6 @@ export class TaskDeliveryController {
     taskVO.templateCode = updatedEntity.task.templateCode;
     taskVO.maxScore = updatedEntity.task.maxScore;
     taskVO.limitDate = updatedEntity.task.limitDate;
-    taskVO.limitTime = updatedEntity.task.limitTime;
 
     taskDeliveryVO.id = updatedEntity.id;
     taskDeliveryVO.user = userVO;
@@ -256,7 +253,7 @@ export class TaskDeliveryController {
     taskVO.templateCode = updatedEntity.task.templateCode;
     taskVO.maxScore = updatedEntity.task.maxScore;
     taskVO.limitDate = updatedEntity.task.limitDate;
-    taskVO.limitTime = updatedEntity.task.limitTime;
+
 
     taskDeliveryVO.id = updatedEntity.id;
     taskDeliveryVO.user = userVO;

@@ -16,7 +16,6 @@ export class ShellService {
     });
 
     return output;
-
   }
 
 }

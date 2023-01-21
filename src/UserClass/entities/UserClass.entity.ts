@@ -7,6 +7,7 @@ export class UserClass{
 
     @PrimaryColumn({type:"int",name:"user_id"})
     userId:number;
+    
     @PrimaryColumn({type:"varchar" ,name:"class_id"})
     classId:string;
 

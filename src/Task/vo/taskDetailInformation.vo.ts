@@ -8,6 +8,5 @@ export class TaskDetailInformationVO {
   maxScore: number;
   allowedLanguages:ProgrammingLanguageVO[];
   templateCode: string;
-  limitTime: string;
   limitDate: Date;
 }

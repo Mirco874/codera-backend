@@ -11,9 +11,6 @@ export class CreateTaskDTO {
   maxScore: number;
   @IsString()
   templateCode: string;
-  @IsString()
-  limitTime: string;
   @IsISO8601()
   limitDate: Date;
-
 }

@@ -59,7 +59,6 @@ export class TaskController {
       vo.taskDescription = entity.taskDescription;
       vo.maxScore = entity.maxScore;
       vo.limitDate = entity.limitDate;
-      vo.limitTime = entity.limitTime;
       voList.push(vo);
     });
 
@@ -94,7 +93,6 @@ export class TaskController {
     taskVO.taskDescription = findEntity.taskDescription;
     taskVO.maxScore = findEntity.maxScore;
     taskVO.templateCode = findEntity.templateCode;
-    taskVO.limitTime = findEntity.limitTime;
     taskVO.limitDate = findEntity.limitDate;
     taskVO.allowedLanguages=languagesVOList;
     return taskVO;
@@ -134,7 +132,6 @@ export class TaskController {
       vo.taskDescription = entity.taskDescription;
       vo.maxScore = entity.maxScore;
       vo.limitDate = entity.limitDate;
-      vo.limitTime = entity.limitTime;
       vo.allowedLanguages = languagesVOList;
 
       voList.push(vo);
@@ -166,7 +163,6 @@ export class TaskController {
     taskVO.taskDescription = savedEntity.taskDescription;
     taskVO.maxScore = savedEntity.maxScore;
     taskVO.templateCode = savedEntity.templateCode;
-    taskVO.limitTime = savedEntity.limitTime;
     taskVO.limitDate = savedEntity.limitDate;
     return taskVO;
   }
@@ -188,7 +184,6 @@ export class TaskController {
     findEntity.taskDescription = ediClassDTO.taskDescription;
     findEntity.maxScore = ediClassDTO.maxScore;
     findEntity.templateCode = ediClassDTO.templateCode;
-    findEntity.limitTime = ediClassDTO.limitTime;
     findEntity.limitDate = ediClassDTO.limitDate;
 
     const updatedEntity = await this.taskService.update(findEntity);
@@ -200,7 +195,6 @@ export class TaskController {
     taskDetailInformationVO.taskDescription = updatedEntity.taskDescription;
     taskDetailInformationVO.maxScore = updatedEntity.maxScore;
     taskDetailInformationVO.templateCode = updatedEntity.templateCode;
-    taskDetailInformationVO.limitTime = updatedEntity.limitTime;
     taskDetailInformationVO.limitDate = updatedEntity.limitDate;
 
     return taskDetailInformationVO;

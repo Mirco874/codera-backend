@@ -13,8 +13,8 @@ export class TaskService {
 
   findById(id: number): Promise<Task> {
     const entity= this.taskRepository.createQueryBuilder('Task')
-    .innerJoinAndSelect('Task.taskLanguage','TaskLanguage')
-    .innerJoinAndSelect('TaskLanguage.programmingLanguage','ProgrammingLanguage')
+    .leftJoinAndSelect('Task.taskLanguage','TaskLanguage')
+    .leftJoinAndSelect('TaskLanguage.programmingLanguage','ProgrammingLanguage')
     .where('Task.id=:id', { id })
     .getOne();
     return entity;
@@ -59,14 +59,15 @@ export class TaskService {
   persist(createTaskDTO: CreateTaskDTO): Promise<Task> {
     const entity = new Task();
 
+    createTaskDTO.limitDate= new Date(createTaskDTO.limitDate);
+
     entity.classId = createTaskDTO.classId;
     entity.taskTitle = createTaskDTO.taskTitle;
     entity.taskDescription = createTaskDTO.taskDescription;
     entity.maxScore = createTaskDTO.maxScore;
     entity.templateCode = createTaskDTO.templateCode;
-    entity.limitTime = createTaskDTO.limitTime;
     entity.limitDate = createTaskDTO.limitDate;
-    console.log(entity);
+
     return this.taskRepository.save(entity);
   }
 

@@ -9,6 +9,7 @@ import {
   NotFoundException,
   BadRequestException,
   ValidationPipe,
+  Inject
 } from '@nestjs/common';
 import { CreateClassDTO } from '../dto/CreateClass.dto';
 import { ClassGroupService } from '../service/ClassGroup.service';
@@ -24,6 +25,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { GetUser } from 'src/User/service/GetUser';
 import { User } from 'src/User/entities/User.entity';
+import { forwardRef } from '@nestjs/common/utils';
 
 @Controller('api/v1/classes/')
 @UseGuards(JwtAuthGuard)
@@ -31,11 +33,11 @@ export class ClassGroupController {
   constructor(
     private classGroupService: ClassGroupService,
     private userService: UserService,
+    @Inject(forwardRef(() => UserClassService))
     private userClassService: UserClassService,
     private formValidatorService: ClassFormValidatorService
   ) {}
 
-  
   @Get()
   async findAll(@GetUser() user:User): Promise<ClassGroupVO[]> {
   const findEntity = await this.userService.findById(user.id);
@@ -69,9 +71,6 @@ export class ClassGroupController {
   return voList;
 
   }
-
-
-
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<ClassGroupVO> {

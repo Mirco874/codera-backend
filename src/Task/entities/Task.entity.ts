@@ -3,7 +3,7 @@ import { TaskDelivery } from 'src/TaskDelivery/entities/TaskDelivery.entity';
 import { TaskLanguage } from 'src/TaskLanguage/entities/TaskLanguage.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 
-@Entity()
+@Entity({name:"task"})
 export class Task {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,8 +23,6 @@ export class Task {
   @Column({ name: 'template_code' })
   templateCode: string;
  
-  @Column({ name: 'limit_time' })
-  limitTime: string;
 
   @Column({ name: 'limit_date' })
   limitDate: Date;

@@ -25,7 +25,7 @@ export class CodeEditorController{
         return vo;
     }
 
-    @Post("run/javaScript")
+    @Post("run/javascript")
     async interpretJavaScript(@Body(ValidationPipe) interpretedLanguageDTO:InterpretedLanguageDTO ):Promise<RunResultsVO>{
       const vo= new RunResultsVO();
       vo.output=await this.codeEditorService.InterpretJavaScript(interpretedLanguageDTO);
@@ -38,5 +38,7 @@ export class CodeEditorController{
       vo.output=await this.codeEditorService.InterpretPython(interpretedLanguageDTO);
       return vo;
     }
+
+
 
 }

@@ -7,6 +7,5 @@ export class TaskBasicInformationVO {
   taskDescription: string;
   maxScore: number;
   allowedLanguages:ProgrammingLanguageVO[];
-  limitTime: string;
   limitDate: Date;
 }
