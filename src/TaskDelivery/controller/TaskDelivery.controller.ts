@@ -21,6 +21,8 @@ import { ProgrammingLanguageVO } from 'src/ProgrammingLanguage/vo/ProgrammingLan
 import { TaskService } from 'src/Task/service/Task.service';
 import { TaskBasicInformationVO } from 'src/Task/vo/taskBasicInformation.vo';
 import { TaskDetailInformationVO } from 'src/Task/vo/taskDetailInformation.vo';
+import { User } from 'src/User/entities/User.entity';
+import { GetUser } from 'src/User/service/GetUser';
 import { UserService } from 'src/User/service/User.service';
 import { UserVO } from 'src/User/vo/User.vo';
 import { createTaskDeliveryDTO } from '../dto/createTaskDelivery.dto';
@@ -156,8 +158,8 @@ export class TaskDeliveryController {
   }
 
   @Post()
-  persist(@Body() createTaskDeliveryDTO: createTaskDeliveryDTO): void {
-    this.taskDeliveryService.persist(createTaskDeliveryDTO);
+  persist(@Body(ValidationPipe) createTaskDeliveryDTO: createTaskDeliveryDTO, @GetUser() user:User ): void {
+    this.taskDeliveryService.persist( user.id, createTaskDeliveryDTO );
   }
 
   @Put(':id')

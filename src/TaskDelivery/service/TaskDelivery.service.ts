@@ -59,9 +59,9 @@ export class TaskDeliveryService {
       .getOne();
   }
 
-  persist(createTaskDeliveryDTO: createTaskDeliveryDTO): void {
+  persist( userId: number, createTaskDeliveryDTO: createTaskDeliveryDTO ): void {
     const entity = new TaskDelivery();
-    entity.userId = createTaskDeliveryDTO.userId;
+    entity.userId = userId;
     entity.taskId = createTaskDeliveryDTO.taskId;
     entity.languageId = createTaskDeliveryDTO.languageId;
     entity.code = createTaskDeliveryDTO.code;

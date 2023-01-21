@@ -1,6 +1,10 @@
+import { IsNumber, IsString } from "class-validator";
+
 export class createTaskDeliveryDTO {
-  userId: number;
+  @IsNumber()
   taskId: number;
+  @IsNumber()
   languageId: number;
+  @IsString()
   code: string;
 }
