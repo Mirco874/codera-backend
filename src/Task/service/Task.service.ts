@@ -36,6 +36,8 @@ export class TaskService {
   async findToDoTask(userId: number, classId: string): Promise<Task[]> {
     const qb = await this.taskRepository
       .createQueryBuilder('Task')
+      .leftJoinAndSelect('Task.taskLanguage','TaskLanguage')
+      .leftJoinAndSelect('TaskLanguage.programmingLanguage','ProgrammingLanguage')
       .leftJoin('Task.classGroup', 'ClassGroup')
       .andWhere('Task.classId=:classId', { classId });
 

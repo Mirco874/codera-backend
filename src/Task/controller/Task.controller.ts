@@ -48,14 +48,27 @@ export class TaskController {
     const entityList = await this.taskService.findToDoTask(user.id, classId);
     const voList: TaskBasicInformationVO[] = [];
 
+    console.log(entityList);
+
     entityList.map((entity) => {
       const vo = new TaskBasicInformationVO();
+      let languagesVOList: ProgrammingLanguageVO[] = [];
+
+      entity.taskLanguage.map((languageEntity) => {
+        const languageVO = new ProgrammingLanguageVO();
+        languageVO.id = languageEntity.programmingLanguage.id;
+        languageVO.name = languageEntity.programmingLanguage.name;
+        languageVO.logo = languageEntity.programmingLanguage.logo;
+        languagesVOList.push(languageVO);
+      })
+
       vo.id = entity.id;
       vo.classId = entity.classId;
       vo.taskTitle = entity.taskTitle;
       vo.taskDescription = entity.taskDescription;
       vo.maxScore = entity.maxScore;
       vo.limitDate = entity.limitDate;
+      vo.allowedLanguages=languagesVOList;
       voList.push(vo);
     });
 
@@ -73,8 +86,6 @@ export class TaskController {
     const taskVO = new TaskDetailInformationVO();
 
     let languagesVOList: ProgrammingLanguageVO[] = [];
-
-    console.log(findEntity.taskLanguage);
 
     findEntity.taskLanguage.map((languageEntity) => {
       const languageVO = new ProgrammingLanguageVO();
