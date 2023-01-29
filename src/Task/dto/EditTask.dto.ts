@@ -1,6 +1,6 @@
 import { IsISO8601, IsNumber, IsString } from "class-validator";
 
-export class EditClassDTO {
+export class EditTaskDTO {
     @IsString()
     taskTitle: string;
     @IsString()

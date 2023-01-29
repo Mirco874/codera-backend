@@ -2,7 +2,7 @@ import { ClassGroup } from 'src/ClassGroup/entities/ClassGroup.entity';
 import { TaskDelivery } from 'src/TaskDelivery/entities/TaskDelivery.entity';
 import { TaskLanguage } from 'src/TaskLanguage/entities/TaskLanguage.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
-
+ 
 @Entity({name:"task"})
 export class Task {
   @PrimaryGeneratedColumn()
@@ -23,7 +23,6 @@ export class Task {
   @Column({ name: 'template_code' })
   templateCode: string;
  
-
   @Column({ name: 'limit_date' })
   limitDate: Date;
 
@@ -31,10 +30,10 @@ export class Task {
   @JoinColumn({ name: 'class_id' })
   classGroup:ClassGroup;
 
-  @OneToMany(()=>TaskDelivery,(taskDelivery)=>taskDelivery.task)
+  @OneToMany(()=>TaskDelivery,(taskDelivery)=>taskDelivery.task )
   taskDeliveries:TaskDelivery[];
 
-  @OneToMany(() => TaskLanguage, taskLanguage => taskLanguage.task)
+  @OneToMany(() => TaskLanguage, taskLanguage => taskLanguage.task, {onUpdate:'NO ACTION'} )
   taskLanguage!: TaskLanguage[];
 
 }

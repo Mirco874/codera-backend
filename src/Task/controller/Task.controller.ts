@@ -16,20 +16,19 @@ import { ClassGroupService } from 'src/ClassGroup/service/ClassGroup.service';
 import { ProgrammingLanguageVO } from 'src/ProgrammingLanguage/vo/ProgrammingLanguage.vo';
 import { User } from 'src/User/entities/User.entity';
 import { GetUser } from 'src/User/service/GetUser';
-import { UserService } from 'src/User/service/User.service';
 import { CreateTaskDTO } from '../dto/CreateTask.dto';
-import { EditClassDTO } from '../dto/EditTask.dto';
+import { EditTaskDTO } from '../dto/EditTask.dto';
 import { TaskService } from '../service/Task.service';
 import { TaskBasicInformationVO } from '../vo/taskBasicInformation.vo';
 import { TaskDetailInformationVO } from '../vo/taskDetailInformation.vo';
+
 
 @Controller('api/v1/tasks/')
 @UseGuards(JwtAuthGuard)
 export class TaskController {
   constructor(
     private taskService: TaskService,
-    private classGroupService: ClassGroupService,
-    private userService: UserService,
+    private classGroupService: ClassGroupService
   ) {}
 
   @Get('/todo')
@@ -48,7 +47,6 @@ export class TaskController {
     const entityList = await this.taskService.findToDoTask(user.id, classId);
     const voList: TaskBasicInformationVO[] = [];
 
-    console.log(entityList);
 
     entityList.map((entity) => {
       const vo = new TaskBasicInformationVO();
@@ -75,7 +73,6 @@ export class TaskController {
     return voList;
   }
 
-  // class/123-456-789/tasks
   @Get(':id')
   async findById(@Param('id') id: number): Promise<TaskDetailInformationVO> {
     const findEntity = await this.taskService.findById(id);
@@ -178,34 +175,16 @@ export class TaskController {
   @Put(':id')
   async update(
     @Param('id') id: number,
-    @Body(ValidationPipe) ediClassDTO: EditClassDTO,
-  ): Promise<TaskDetailInformationVO> {
+    @Body(ValidationPipe) editTaskDTO: EditTaskDTO,
+  ): Promise<void> {
     const findEntity = await this.taskService.findById(id);
 
     if (!findEntity) {
       throw new NotFoundException(`There is not a task with id: ${id}`);
     }
 
-    ediClassDTO.limitDate= new Date(ediClassDTO.limitDate);
+    await this.taskService.update( id, editTaskDTO );
 
-    findEntity.taskTitle = ediClassDTO.taskTitle;
-    findEntity.taskDescription = ediClassDTO.taskDescription;
-    findEntity.maxScore = ediClassDTO.maxScore;
-    findEntity.templateCode = ediClassDTO.templateCode;
-    findEntity.limitDate = ediClassDTO.limitDate;
-
-    const updatedEntity = await this.taskService.update(findEntity);
-
-    const taskDetailInformationVO = new TaskDetailInformationVO();
-    taskDetailInformationVO.id = updatedEntity.id;
-    taskDetailInformationVO.classId = updatedEntity.classId;
-    taskDetailInformationVO.taskTitle = updatedEntity.taskTitle;
-    taskDetailInformationVO.taskDescription = updatedEntity.taskDescription;
-    taskDetailInformationVO.maxScore = updatedEntity.maxScore;
-    taskDetailInformationVO.templateCode = updatedEntity.templateCode;
-    taskDetailInformationVO.limitDate = updatedEntity.limitDate;
-
-    return taskDetailInformationVO;
   }
 
   @Delete(':id')
@@ -214,6 +193,7 @@ export class TaskController {
     if (!findEntity) {
       throw new NotFoundException(`There is not a task with id: ${id}`);
     }
+
     this.taskService.remove(findEntity);
   }
 }

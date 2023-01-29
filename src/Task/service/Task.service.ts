@@ -1,14 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { Inject } from '@nestjs/common/decorators';
+import { forwardRef } from '@nestjs/common/utils';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TaskDeliveryService } from 'src/TaskDelivery/service/TaskDelivery.service';
+import { TaskLanguageService } from 'src/TaskLanguage/service/TaskLanguage.service';
 import { Repository } from 'typeorm';
 import { CreateTaskDTO } from '../dto/CreateTask.dto';
+import { EditTaskDTO } from '../dto/EditTask.dto';
 import { Task } from '../entities/Task.entity';
-import { TaskBasicInformationVO } from '../vo/taskBasicInformation.vo';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
+    @Inject(forwardRef(() => TaskLanguageService))
+    private taskLanguageService: TaskLanguageService,
+    @Inject(forwardRef(() => TaskDeliveryService))
+    private taskDeliveryService: TaskDeliveryService,
   ) {}
 
   findById(id: number): Promise<Task> {
@@ -26,12 +34,11 @@ export class TaskService {
     .innerJoinAndSelect('Task.taskLanguage','TaskLanguage')
     .innerJoinAndSelect('TaskLanguage.programmingLanguage','ProgrammingLanguage')
     .where('Task.classId=:id', { id })
+    .orderBy('Task.limitDate', 'ASC')
     .getMany();
     return entityList;
 
   }
-
-
 
   async findToDoTask(userId: number, classId: string): Promise<Task[]> {
     const qb = await this.taskRepository
@@ -39,6 +46,7 @@ export class TaskService {
       .leftJoinAndSelect('Task.taskLanguage','TaskLanguage')
       .leftJoinAndSelect('TaskLanguage.programmingLanguage','ProgrammingLanguage')
       .leftJoin('Task.classGroup', 'ClassGroup')
+      .orderBy('Task.limitDate', 'ASC')
       .andWhere('Task.classId=:classId', { classId });
 
     const qb2 = this.taskRepository
@@ -56,8 +64,6 @@ export class TaskService {
     return qb.getMany();
   }
 
-
-
   persist(createTaskDTO: CreateTaskDTO): Promise<Task> {
     const entity = new Task();
 
@@ -73,11 +79,29 @@ export class TaskService {
     return this.taskRepository.save(entity);
   }
 
-  update(entity: Task): Promise<Task> {
-    return this.taskRepository.save(entity);
+  update( id, editTaskDTO: EditTaskDTO ): void {
+
+    editTaskDTO.limitDate= new Date( editTaskDTO.limitDate );
+
+    this.taskRepository.createQueryBuilder('Task')
+    .update('Task')
+    .set({
+          taskTitle: editTaskDTO.taskTitle,
+          taskDescription: editTaskDTO.taskDescription, 
+          maxScore: editTaskDTO.maxScore,
+          templateCode: editTaskDTO.templateCode,
+          limitDate: editTaskDTO.limitDate
+        })
+    .where("Task.id = :id", { id })
+    .execute()
+
   }
 
-  remove(entity: Task): void {
+  async remove(entity: Task): Promise<void> {
+    const taskLanguageList =await this.taskLanguageService.findAllByTaskId(entity.id);
+    const taskDeliveryList =await this.taskDeliveryService.findAllByTaskId(entity.id);
+    this.taskLanguageService.removeMany(taskLanguageList);
+    this.taskDeliveryService.removeMany(taskDeliveryList);
     this.taskRepository.remove(entity);
   }
 }
