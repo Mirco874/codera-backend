@@ -32,7 +32,7 @@ export class AuthService {
 
   async registerUser(createUserDTO: CreateUserDTO): Promise<User> {
     const hashedPassword = await hash(createUserDTO.password, 10);
-    createUserDTO.password = hashedPassword;
+    createUserDTO.password = hashedPassword; 
     return this.userService.persist(createUserDTO);
   }
 
