@@ -6,6 +6,6 @@ export class TaskDeliveryBasicInformationVO{
     user:UserVO;
     task:TaskBasicInformationVO;
     score:number;
-    deliveryDate:string;
-    deliveryTime:string;
+    deliveryDate:Date;
+
 }

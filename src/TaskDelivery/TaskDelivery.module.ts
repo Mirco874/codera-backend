@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { forwardRef } from "@nestjs/common/utils";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ClassGroupModule } from "src/ClassGroup/ClassGroup.module";
 import { TaskModule } from "src/Task/Task.module";
@@ -9,7 +10,7 @@ import { TaskDeliveryService } from "./service/TaskDelivery.service";
 
 @Module(
     {
-    imports:[TypeOrmModule.forFeature([TaskDelivery]),UserModule,TaskModule,ClassGroupModule],
+    imports:[TypeOrmModule.forFeature([TaskDelivery]), UserModule, forwardRef(() => TaskModule ) , ClassGroupModule],
     providers:[TaskDeliveryService],
     controllers:[TaskDeliveryController],
     exports:[TaskDeliveryService]

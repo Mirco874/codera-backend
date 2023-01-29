@@ -41,8 +41,6 @@ export class TaskDeliveryService {
       .where('TaskDelivery.userId=:userId', { userId })
       .andWhere('Task.classId=:classId', { classId })
       .getMany();
-
-    console.log(entityList);
     return entityList;
   }
 
@@ -67,13 +65,8 @@ export class TaskDeliveryService {
     entity.code = createTaskDeliveryDTO.code;
 
     entity.score = null;
-    const currentDate = new Date();
-    const currentDay = `${currentDate.getUTCFullYear()}-${currentDate.getUTCMonth() + 1}-${currentDate.getUTCDate()}`;
+    entity.deliveryDate = new Date();
 
-    const currentTime = currentDate.toISOString().substring(11, 19);
-
-    entity.deliveryDate = currentDay;
-    entity.deliveryTime = currentTime;
 
     this.taskDeliveryRepository.save(entity);
   }
@@ -82,7 +75,11 @@ export class TaskDeliveryService {
     return this.taskDeliveryRepository.save(taskDelivery);
   }
 
-  remove(taskDelivery: TaskDelivery): void {
+  removeOne(taskDelivery: TaskDelivery): void {
     this.taskDeliveryRepository.remove(taskDelivery);
   }
+  removeMany(taskDelivery: TaskDelivery[]): void {
+    this.taskDeliveryRepository.remove(taskDelivery);
+  }
+
 }

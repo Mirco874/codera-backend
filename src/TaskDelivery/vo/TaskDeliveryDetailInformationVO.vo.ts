@@ -9,6 +9,5 @@ export class TaskDeliveryDetailInformationVO{
     language:ProgrammingLanguageVO;
     code:string;
     score:number;
-    deliveryDate:string;
-    deliveryTime:string;
+    deliveryDate:Date;
 }

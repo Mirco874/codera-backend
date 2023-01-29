@@ -9,12 +9,13 @@ import {
   Body,
   Patch,
 } from '@nestjs/common';
-import { UseGuards } from '@nestjs/common/decorators';
+import { Inject, UseGuards } from '@nestjs/common/decorators';
 import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
 import { ValidationPipe } from '@nestjs/common/pipes';
+import { forwardRef } from '@nestjs/common/utils';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ClassGroupService } from 'src/ClassGroup/service/ClassGroup.service';
 import { ProgrammingLanguageVO } from 'src/ProgrammingLanguage/vo/ProgrammingLanguage.vo';
@@ -39,14 +40,15 @@ export class TaskDeliveryController {
   constructor(
     private taskDeliveryService: TaskDeliveryService,
     private userService: UserService,
+    @Inject(forwardRef(() => TaskService))
     private taskService: TaskService,
     private classGroupService: ClassGroupService,
   ) {}
 
   @Get()
   async findAll(
+    @GetUser() user: User,
     @Query('taskId') taskId: number,
-    @Query('userId') userId: number,
     @Query('classId') classId: string,
   ): Promise<TaskDeliveryBasicInformationVO[]> {
     let taskDeliveriesVO: TaskDeliveryBasicInformationVO[] = [];
@@ -61,25 +63,15 @@ export class TaskDeliveryController {
       }
       entityList = await this.taskDeliveryService.findAllByTaskId(taskId);
     } else {
-      if (typeof userId !== 'undefined' && typeof classId !== 'undefined') {
-        const findUser = await this.userService.findById(userId);
+      if (typeof classId !== 'undefined') {
         const findClass = await this.classGroupService.findById(classId);
 
-        if (!findUser) {
-          throw new NotFoundException(
-            `There is not a user with the id: ${userId}`,
-          );
-        }
         if (!findClass) {
           throw new NotFoundException(
             `There is not a class with the id: ${classId}`,
           );
         }
-
-        entityList = await this.taskDeliveryService.findAllByUserIdAndClassId(
-          userId,
-          classId,
-        );
+        entityList = await this.taskDeliveryService.findAllByUserIdAndClassId( user.id, classId );
       }
     }
 
@@ -105,7 +97,7 @@ export class TaskDeliveryController {
       taskDeliveryVO.task = taskVO;
       taskDeliveryVO.score = entity.score;
       taskDeliveryVO.deliveryDate = entity.deliveryDate;
-      taskDeliveryVO.deliveryTime = entity.deliveryTime;
+
 
       taskDeliveriesVO.push(taskDeliveryVO);
     });
@@ -152,7 +144,6 @@ export class TaskDeliveryController {
     taskDeliveryVO.code = findEntity.code;
     taskDeliveryVO.score = findEntity.score;
     taskDeliveryVO.deliveryDate = findEntity.deliveryDate;
-    taskDeliveryVO.deliveryTime = findEntity.deliveryTime;
 
     return taskDeliveryVO;
   }
@@ -171,7 +162,6 @@ export class TaskDeliveryController {
     findEntity.languageId = updateTaskDeliveryDTO.languageId;
     findEntity.code = updateTaskDeliveryDTO.code;
     findEntity.deliveryDate = updateTaskDeliveryDTO.deliveryDate;
-    findEntity.deliveryTime = updateTaskDeliveryDTO.deliveryTime;
 
     const updatedEntity = await this.taskDeliveryService.update(findEntity);
 
@@ -204,7 +194,6 @@ export class TaskDeliveryController {
     taskDeliveryVO.code = updatedEntity.code;
     taskDeliveryVO.score = updatedEntity.score;
     taskDeliveryVO.deliveryDate = updatedEntity.deliveryDate;
-    taskDeliveryVO.deliveryTime = updatedEntity.deliveryTime;
 
     return taskDeliveryVO;
   }
@@ -263,7 +252,6 @@ export class TaskDeliveryController {
     taskDeliveryVO.language = languageVO;
     taskDeliveryVO.score = updatedEntity.score;
     taskDeliveryVO.deliveryDate = updatedEntity.deliveryDate;
-    taskDeliveryVO.deliveryTime = updatedEntity.deliveryTime;
 
     return taskDeliveryVO;
   }
@@ -272,6 +260,6 @@ export class TaskDeliveryController {
   async remove(@Param('id') id: number): Promise<void> {
     const findEntity = await this.taskDeliveryService.findById(id);
 
-    this.taskDeliveryService.remove(findEntity);
+    this.taskDeliveryService.removeOne(findEntity);
   }
 }
