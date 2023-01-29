@@ -53,19 +53,20 @@ export class ClassGroupController {
   let voList: ClassGroupVO[] = [];
 
   entityList.map((entity) => {
-    const vo = new ClassGroupVO();
+    const classGroupVO = new ClassGroupVO();
     
-    vo.setId(entity.id);
-    vo.setClassName(entity.className);
-    vo.setClassDescription(entity.classDescription);
+    classGroupVO.id= entity.id;
+    classGroupVO.className= entity.className;
+    classGroupVO.classDescription= entity.classDescription;
+    classGroupVO.creationDate= entity.creationDate;
 
     const teacherVO = new TeacherVO();
-    teacherVO.setId(entity.teacher.id);
-    teacherVO.setFullName(entity.teacher.fullName);
+    teacherVO.id= entity.teacher.id;
+    teacherVO.fullName= entity.teacher.fullName;
 
-    vo.setInstructor(teacherVO);
+    classGroupVO.instructor=(teacherVO);
 
-    voList.push(vo);
+    voList.push(classGroupVO);
   });
 
   return voList;
@@ -81,15 +82,17 @@ export class ClassGroupController {
     }
 
     const teacherVO = new TeacherVO();
-    teacherVO.setId(findEntity.teacher.id);
-    teacherVO.setFullName(findEntity.teacher.fullName);
+    teacherVO.id= findEntity.teacher.id;
+    teacherVO.fullName= findEntity.teacher.fullName;
 
     const classGroupVO = new ClassGroupVO();
-    classGroupVO.setId(findEntity.id);
-    classGroupVO.setClassName(findEntity.className);
-    classGroupVO.setClassDescription(findEntity.classDescription);
-    classGroupVO.setInstructor(teacherVO);
 
+    classGroupVO.id= findEntity.id;
+    classGroupVO.className= findEntity.className;
+    classGroupVO.classDescription= findEntity.classDescription;
+    classGroupVO.creationDate= findEntity.creationDate;
+    classGroupVO.instructor= teacherVO;
+    
     return classGroupVO;
   }
 
@@ -121,9 +124,12 @@ export class ClassGroupController {
     this.userClassService.persist(suscribeUserDTO);
 
     const classGroupVO = new ClassGroupVO();
-    classGroupVO.setId(savedEntity.id);
-    classGroupVO.setClassName(savedEntity.className);
-    classGroupVO.setClassDescription(savedEntity.classDescription);
+
+    classGroupVO.id= savedEntity.id;
+    classGroupVO.className= savedEntity.className;
+    classGroupVO.classDescription= savedEntity.classDescription;
+    classGroupVO.creationDate= savedEntity.creationDate;
+
     return classGroupVO;
   }
 
@@ -140,12 +146,16 @@ export class ClassGroupController {
 
     findEntity.className = editClassDTO.className;
     findEntity.classDescription = editClassDTO.classDescription;
+    findEntity.creationDate =new Date();
 
     const updatedEntity = await this.classGroupService.update(findEntity);
-    const vo = new ClassGroupVO();
-    vo.setId(updatedEntity.id);
-    vo.setClassName(updatedEntity.className);
-    vo.setClassDescription(updatedEntity.classDescription);
-    return vo;
+    const classGroupVO = new ClassGroupVO();
+
+    classGroupVO.id= updatedEntity.id;
+    classGroupVO.className= updatedEntity.className;
+    classGroupVO.classDescription= updatedEntity.classDescription;
+    classGroupVO.creationDate= updatedEntity.creationDate;
+
+    return classGroupVO;
   }
 }

@@ -8,7 +8,6 @@ import { UserService } from 'src/User/service/User.service';
 
 @Injectable()
 export class ClassGroupService {
-  /////////////se pueden crear repositorios con un decorador?////////////
   constructor(
     @InjectRepository(ClassGroup)
     private classGroupRepository: Repository<ClassGroup>,
@@ -16,27 +15,20 @@ export class ClassGroupService {
   ) {}
 
   findById(id: string): Promise<ClassGroup> {
-    try {
-      const classGroup = this.classGroupRepository
-        .createQueryBuilder('ClassGroup')
-        ///dejar la entidad tal como esta? o descartar algunos atributos a este nivel??////
-        .innerJoinAndSelect('ClassGroup.teacher', 'user')
-        .where('ClassGroup.id=:id', { id })
-        .getOne();
-
-      return classGroup;
-    } catch (error) {
-      console.log(error);
-    }
+    return this.classGroupRepository
+    .createQueryBuilder('ClassGroup')
+    .innerJoinAndSelect('ClassGroup.teacher', 'user')
+    .where('ClassGroup.id=:id', { id })
+    .getOne();
   }
-  //////////////////////////ENCONTRAR POR ID DE USUARIO
-  //SOLAMENTE REGRESA LOS ATRIBUTOS DE LA ENTIDAD CLASSGROUP
+
   async findByUserId(id: number): Promise<ClassGroup[]> {
     return this.classGroupRepository
       .createQueryBuilder('ClassGroup')
       .innerJoinAndSelect('ClassGroup.userClass', 'UserClass')
       .innerJoinAndSelect('ClassGroup.teacher', 'User')
       .where('UserClass.userId=:id', { id })
+      .orderBy('ClassGroup.creationDate', 'DESC')
       .getMany();
   }
 
@@ -47,6 +39,7 @@ export class ClassGroupService {
     entity.teacherId = createClassDTO.teacherId;
     entity.className = createClassDTO.className;
     entity.classDescription = createClassDTO.classDescription;
+    entity.creationDate =new Date();
 
     return this.classGroupRepository.save(entity);
   }

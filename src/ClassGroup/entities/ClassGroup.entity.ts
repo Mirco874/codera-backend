@@ -17,14 +17,17 @@ export class ClassGroup {
   @Column({ name: 'class_description' })
   classDescription: string;
 
+  @Column({ name: 'creation_date' })
+  creationDate: Date;
+ 
   @ManyToOne(() => User, (user) => user.classes)
   @JoinColumn({ name: 'teacher_id' })
   teacher: User
 
-  @OneToMany(()=>Task,(task)=>task.classGroup)
+  @OneToMany(()=>Task,(task)=>task.classGroup )
   tasks:Task[];
 
-  @OneToMany(() => UserClass, (userClass) => userClass.classGroup)
+  @OneToMany(() => UserClass, (userClass) => userClass.classGroup )
   userClass!: UserClass[];
 
 }
