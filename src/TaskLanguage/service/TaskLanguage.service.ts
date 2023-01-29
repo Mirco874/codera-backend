@@ -8,11 +8,14 @@ import { TaskLanguage } from '../entities/TaskLanguage.entity';
 export class TaskLanguageService {
   constructor(
     @InjectRepository(TaskLanguage)
-    private taskLanguageRepository: Repository<TaskLanguage>,
-  ) {}
-  //preguntar
+    private taskLanguageRepository: Repository<TaskLanguage>) {}
+
   find(taskId: number, languageId: number): Promise<TaskLanguage> {
     return this.taskLanguageRepository.findOneBy({ taskId, languageId });
+  }
+
+  findAllByTaskId(taskId: number): Promise<TaskLanguage[]> {
+    return this.taskLanguageRepository.findBy({ taskId });
   }
 
   persist(taskId: number, languageId: number): void {
@@ -23,9 +26,20 @@ export class TaskLanguageService {
     this.taskLanguageRepository.save(entity);
   }
 
-  //no se puede editar
-  //preguntar, no se puede por params
-  remove(taskLanguage: TaskLanguage): void {
+  removeByTaskId(taskId: number) :void {
+    this.taskLanguageRepository.createQueryBuilder('TaskLanguage')
+    .delete()
+    .from('TaskLanguage')
+    .where("taskId=:taskId", {taskId})
+    .execute();
+  }
+
+  removeMany(taskLanguage: TaskLanguage[] ): void {
     this.taskLanguageRepository.remove(taskLanguage);
   }
+
+  removeOne(taskLanguage: TaskLanguage ): void {
+    this.taskLanguageRepository.remove(taskLanguage);
+  }
+
 }
