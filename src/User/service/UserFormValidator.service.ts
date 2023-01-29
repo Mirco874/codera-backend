@@ -19,10 +19,8 @@ export class UserFormValidatorService {
   }
 
   correctChangeInformationDTO(changeInformationDTO: ChangeUserInformationDTO) {
-    return (
-      this.validString(changeInformationDTO.email) &&
-      this.validString(changeInformationDTO.fullName)
-    );
+    return this.validString(changeInformationDTO.fullName)
+
   }
 
   validString(word: string): boolean {

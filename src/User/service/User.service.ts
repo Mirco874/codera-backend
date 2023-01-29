@@ -21,37 +21,13 @@ export class UserService {
   }
 
   async findById(id: number): Promise<User> {
-    // .leftJoin("ClassGroup.teacher","ClassGroup")
-    // .where("ClassGroup.teacherId=:id",{id:"3"})
-    console.log('-----------------------------');
-    const query = await this.usersRepository
-      .createQueryBuilder('User')
-      .leftJoinAndSelect('User.classes', 'ClassGroup')
-      .where({ id })
-      .getMany();
-    console.log(query);
-    console.log('-----------------------------');
-
-    console.log('-----------------------------');
-    const query2 = await this.usersRepository
-      .createQueryBuilder('User')
-      .where({ id })
-      .getMany();
-    console.log(query2);
-    console.log('-----------------------------');
-    // await getRepository(Foo).createQueryBuilder('foo')
-    // .where({ id: 1})
-    // .select(['foo.id', 'foo.createdAt', 'bar.id', 'bar.name'])
-    // .leftJoin('foo.bars', 'bar')  // bar is the joined table
-    // .getMany();
-
     return this.usersRepository.findOneBy({ id });
   }
 
   findByEmail(email: string): Promise<User> {
     return this.usersRepository.findOne({ where: { email } });
   }
-  //api/v1/:user_id/classes
+
   async findClassesByUserId(id:number):Promise<void>{
     const userClasses= await this.usersRepository.createQueryBuilder('User')
     .select(['User.id','User.fullName','User.email'])
@@ -66,11 +42,10 @@ export class UserService {
 
   persist(createUserDTO: CreateUserDTO): Promise<User> {
     const entity = new User();
-    //////////////////////preguntar//////////////////////
+
     entity.fullName=(createUserDTO.fullName);
     entity.email=(createUserDTO.email);
     entity.password=(createUserDTO.password);
-
     return this.usersRepository.save(entity);
   }
 

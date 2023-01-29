@@ -3,7 +3,7 @@ import { ClassGroup } from 'src/ClassGroup/entities/ClassGroup.entity';
 import { DeliveryComment } from 'src/DeliveryComment/entities/DeliveryComment.entity';
 import { TaskDelivery } from 'src/TaskDelivery/entities/TaskDelivery.entity';
 import { UserClass } from 'src/UserClass/entities/UserClass.entity';
-import {Entity,PrimaryGeneratedColumn,Column, OneToMany, JoinColumn} from 'typeorm';
+import {Entity,PrimaryGeneratedColumn,Column, OneToMany, JoinColumn, Unique} from 'typeorm';
 
 @Entity()
 export class User{

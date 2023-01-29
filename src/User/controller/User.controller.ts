@@ -20,6 +20,7 @@ import { GetUser } from '../service/GetUser';
 import { UserService } from '../service/User.service';
 import { UserFormValidatorService } from '../service/UserFormValidator.service';
 import { UserVO } from '../vo/User.vo';
+import { ValidationPipe } from '@nestjs/common/pipes';
 
 @Controller('api/v1/users/')
 @UseGuards(JwtAuthGuard)
@@ -45,15 +46,20 @@ return findUser
 
   @Post()
   async persist(@Body() createUserDTO: CreateUserDTO): Promise<UserVO> {
+
     if (!this.formValidatorService.correctCreateUserDTO(createUserDTO)) {
       throw new BadRequestException(`you must fill in all the required fields`);
     }
+
+    
     const userVO = new UserVO();
     const savedEntity = await this.userService.persist(createUserDTO);
     userVO.id = savedEntity.id;
     userVO.fullName = savedEntity.fullName;
     userVO.email = savedEntity.email;
     return userVO;
+
+
   }
 
   @Patch(':id')
@@ -85,29 +91,16 @@ return findUser
     return vo;
   }
 
-  @Put(':id')
+  @Put("me")
   async ChangeInformation(
-    @Param('id') id: number,
-    @Body() changeInformationDTO: ChangeUserInformationDTO,
+    @Body( ValidationPipe ) changeInformationDTO: ChangeUserInformationDTO,
+    @GetUser() user: User
   ): Promise<UserVO> {
-    const findEntity = await this.userService.findById(id);
 
-    if (!findEntity) {
-      throw new NotFoundException(
-        `the user with id: ${id} was not register in the database `,
-      );
-    }
+    const findEntity = await this.userService.findById(user.id);
 
-    if (
-      !this.formValidatorService.correctChangeInformationDTO(
-        changeInformationDTO,
-      )
-    ) {
-      throw new BadRequestException(`bad email or username`);
-    }
-
-    findEntity.email = changeInformationDTO.email;
     findEntity.fullName = changeInformationDTO.fullName;
+    findEntity.photo =changeInformationDTO.photo;
 
     const updatedEntity = await this.userService.update(findEntity);
     const vo = new UserVO();
