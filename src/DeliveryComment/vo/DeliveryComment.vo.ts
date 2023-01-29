@@ -4,6 +4,5 @@ export class DeliveryCommentVO{
     id:number;
     user:UserVO;
     content:string;
-    commentTime:string;
-    commentDate:string
+    commentDate:Date
 }

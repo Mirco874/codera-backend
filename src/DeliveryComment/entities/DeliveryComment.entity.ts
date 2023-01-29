@@ -16,11 +16,8 @@ export class DeliveryComment{
     @Column()
     content:string;
 
-    @Column({name:"comment_time"})
-    commentTime:string;
-
     @Column({name:"comment_date"})
-    commentDate:string
+    commentDate: Date
 
     @ManyToOne(()=>User, (user)=>user.comments)
     @JoinColumn({name:"user_id"})

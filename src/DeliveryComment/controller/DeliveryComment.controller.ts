@@ -41,7 +41,6 @@ export class DeliveryCommentController{
             deliveryCommentVO.id=entity.id;
             deliveryCommentVO.user=userVO;
             deliveryCommentVO.content=entity.content;
-            deliveryCommentVO.commentTime=entity.commentTime;
             deliveryCommentVO.commentDate=entity.commentDate;
 
             VOList.push(deliveryCommentVO);

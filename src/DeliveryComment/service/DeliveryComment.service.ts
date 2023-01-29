@@ -17,6 +17,7 @@ export class DeliveryCommentService{
         .innerJoinAndSelect('DeliveryComment.user','User')
         .innerJoin('DeliveryComment.taskDelivery','TaskDelivery')
         .where('TaskDelivery.id=:deliveryId',{deliveryId})
+        .orderBy('DeliveryComment.commentDate','DESC')
         .getMany()
         return entityList;
     }
@@ -29,11 +30,11 @@ export class DeliveryCommentService{
 
         const currentDate = new Date();
 
-        const currentDay = `${currentDate.getUTCFullYear()}-${currentDate.getUTCMonth() + 1}-${currentDate.getUTCDate()}`;
-        const currentTime = currentDate.toISOString().substring(11, 19);
+        // const currentDay = `${currentDate.getUTCFullYear()}-${currentDate.getUTCMonth() + 1}-${currentDate.getUTCDate()}`;
+        // const currentTime = currentDate.toISOString().substring(11, 19);
     
-        entity.commentDate = currentDay;
-        entity.commentTime = currentTime;
+        entity.commentDate = new Date();
+
 
         this.deliveryCommentRepository.save(entity);
     }
