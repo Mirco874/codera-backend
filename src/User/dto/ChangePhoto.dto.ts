@@ -1,13 +1,6 @@
+import { IsString } from "class-validator";
+
 export class changePhotoDTO{
+    @IsString()
     photo:string;
-
-
-    getPhoto():string{
-        return this.photo;
-    }
-
-    setPhoto(photo):void{
-        this.photo=photo;
-    }
-
 }

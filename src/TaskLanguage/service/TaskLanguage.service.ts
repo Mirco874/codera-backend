@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TaskLanguageDTO } from '../dto/TaskLanguage.dto';
 import { TaskLanguage } from '../entities/TaskLanguage.entity';
 
 @Injectable()
@@ -41,5 +40,4 @@ export class TaskLanguageService {
   removeOne(taskLanguage: TaskLanguage ): void {
     this.taskLanguageRepository.remove(taskLanguage);
   }
-
 }

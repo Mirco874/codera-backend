@@ -1,30 +1,37 @@
-import { TaskDelivery } from "src/TaskDelivery/entities/TaskDelivery.entity";
-import { User } from "src/User/entities/User.entity";
-import {Entity,Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn} from "typeorm"
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
-@Entity({name:"delivery_comment"})
-export class DeliveryComment{
-    @PrimaryGeneratedColumn()
-    id:number;
+import { User } from 'src/User/entities/User.entity';
+import { TaskDelivery } from 'src/TaskDelivery/entities/TaskDelivery.entity';
 
-    @Column({name:"delivery_id"})
-    deliveryId:number;
+@Entity({ name: 'delivery_comment' })
+export class DeliveryComment {
+  
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({name:"user_id"})
-    userId:number;
+  @Column({ name: 'delivery_id' })
+  deliveryId: number;
 
-    @Column()
-    content:string;
+  @Column({ name: 'user_id' })
+  userId: number;
 
-    @Column({name:"comment_date"})
-    commentDate: Date
+  @Column()
+  content: string;
 
-    @ManyToOne(()=>User, (user)=>user.comments)
-    @JoinColumn({name:"user_id"})
-    user:User;
+  @Column({ name: 'comment_date' })
+  commentDate: Date;
 
-    @ManyToOne(()=> TaskDelivery,(taskDelivery)=>taskDelivery.comments)
-    @JoinColumn({name:"delivery_id"})
-    taskDelivery:TaskDelivery;
+  @ManyToOne(() => User, (user) => user.comments)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
+  @ManyToOne(() => TaskDelivery, (taskDelivery) => taskDelivery.comments)
+  @JoinColumn({ name: 'delivery_id' })
+  taskDelivery: TaskDelivery;
 }

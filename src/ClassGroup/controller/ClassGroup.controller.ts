@@ -1,31 +1,34 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  Inject,
+  NotFoundException,
   Param,
   Post,
   Put,
-  Query,
-  NotFoundException,
-  BadRequestException,
   ValidationPipe,
-  Inject
 } from '@nestjs/common';
-import { CreateClassDTO } from '../dto/CreateClass.dto';
-import { ClassGroupService } from '../service/ClassGroup.service';
-import { ClassGroupVO } from '../vo/ClassGroup.vo';
-import { EditClassDTO } from '../dto/EditClass.dto';
-import { TeacherVO } from 'src/User/vo/Teacher.vo';
-import { ClassFormValidatorService } from '../service/ClassFormValidator.service';
-import { UserService } from 'src/User/service/User.service';
-import { UserClassService } from 'src/UserClass/service/UserClass.service';
-import { SubscribeUserDTO } from 'src/UserClass/dto/SubscribeUser.dto';
+
 import { UseGuards } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { AuthService } from 'src/auth/auth.service';
-import { GetUser } from 'src/User/service/GetUser';
-import { User } from 'src/User/entities/User.entity';
 import { forwardRef } from '@nestjs/common/utils';
+import { GetUser } from 'src/User/service/GetUser';
+
+import { User } from 'src/User/entities/User.entity';
+
+import { UserService } from 'src/User/service/User.service';
+import { ClassGroupService } from '../service/ClassGroup.service';
+import { UserClassService } from 'src/UserClass/service/UserClass.service';
+import { ClassFormValidatorService } from '../service/ClassFormValidator.service';
+
+import { SubscribeUserDTO } from 'src/UserClass/dto/SubscribeUser.dto';
+import { CreateClassDTO } from '../dto/CreateClass.dto';
+import { EditClassDTO } from '../dto/EditClass.dto';
+
+import { TeacherVO } from 'src/User/vo/Teacher.vo';
+import { ClassGroupVO } from '../vo/ClassGroup.vo';
 
 @Controller('api/v1/classes/')
 @UseGuards(JwtAuthGuard)
@@ -35,42 +38,41 @@ export class ClassGroupController {
     private userService: UserService,
     @Inject(forwardRef(() => UserClassService))
     private userClassService: UserClassService,
-    private formValidatorService: ClassFormValidatorService
+    private formValidatorService: ClassFormValidatorService,
   ) {}
 
   @Get()
-  async findAll(@GetUser() user:User): Promise<ClassGroupVO[]> {
-  const findEntity = await this.userService.findById(user.id);
+  async findAll(@GetUser() user: User): Promise<ClassGroupVO[]> {
+    const findEntity = await this.userService.findById(user.id);
 
-  if (!findEntity) {
-    throw new NotFoundException(
-      `there is not exist a user with the id: ${user.id} `,
-    );
-  }
+    if (!findEntity) {
+      throw new NotFoundException(
+        `there is not exist a user with the id: ${ user.id } `,
+      );
+    }
 
-  const entityList = await this.classGroupService.findByUserId(user.id);
+    const entityList = await this.classGroupService.findByUserId( user.id );
 
-  let voList: ClassGroupVO[] = [];
+    let voList: ClassGroupVO[] = [];
 
-  entityList.map((entity) => {
-    const classGroupVO = new ClassGroupVO();
-    
-    classGroupVO.id= entity.id;
-    classGroupVO.className= entity.className;
-    classGroupVO.classDescription= entity.classDescription;
-    classGroupVO.creationDate= entity.creationDate;
+    entityList.map((entity) => {
+      const classGroupVO = new ClassGroupVO();
 
-    const teacherVO = new TeacherVO();
-    teacherVO.id= entity.teacher.id;
-    teacherVO.fullName= entity.teacher.fullName;
+      classGroupVO.id = entity.id;
+      classGroupVO.className = entity.className;
+      classGroupVO.classDescription = entity.classDescription;
+      classGroupVO.creationDate = entity.creationDate;
 
-    classGroupVO.instructor=(teacherVO);
+      const teacherVO = new TeacherVO();
+      teacherVO.id = entity.teacher.id;
+      teacherVO.fullName = entity.teacher.fullName;
 
-    voList.push(classGroupVO);
-  });
+      classGroupVO.instructor = teacherVO;
 
-  return voList;
+      voList.push(classGroupVO);
+    });
 
+    return voList;
   }
 
   @Get(':id')
@@ -82,24 +84,23 @@ export class ClassGroupController {
     }
 
     const teacherVO = new TeacherVO();
-    teacherVO.id= findEntity.teacher.id;
-    teacherVO.fullName= findEntity.teacher.fullName;
+    teacherVO.id = findEntity.teacher.id;
+    teacherVO.fullName = findEntity.teacher.fullName;
 
     const classGroupVO = new ClassGroupVO();
 
-    classGroupVO.id= findEntity.id;
-    classGroupVO.className= findEntity.className;
-    classGroupVO.classDescription= findEntity.classDescription;
-    classGroupVO.creationDate= findEntity.creationDate;
-    classGroupVO.instructor= teacherVO;
-    
+    classGroupVO.id = findEntity.id;
+    classGroupVO.className = findEntity.className;
+    classGroupVO.classDescription = findEntity.classDescription;
+    classGroupVO.creationDate = findEntity.creationDate;
+    classGroupVO.instructor = teacherVO;
+
     return classGroupVO;
   }
 
   @Post()
-  async persist(
-    @Body(ValidationPipe) createClassDTO: CreateClassDTO,
-  ): Promise<ClassGroupVO> {
+  async persist( @Body(ValidationPipe) createClassDTO: CreateClassDTO ): Promise<ClassGroupVO> {
+
     if (!this.formValidatorService.correctCreateClassGroupDTO(createClassDTO)) {
       throw new BadRequestException(
         'you must provide a className, classDescription and a teacher id',
@@ -125,19 +126,16 @@ export class ClassGroupController {
 
     const classGroupVO = new ClassGroupVO();
 
-    classGroupVO.id= savedEntity.id;
-    classGroupVO.className= savedEntity.className;
-    classGroupVO.classDescription= savedEntity.classDescription;
-    classGroupVO.creationDate= savedEntity.creationDate;
+    classGroupVO.id = savedEntity.id;
+    classGroupVO.className = savedEntity.className;
+    classGroupVO.classDescription = savedEntity.classDescription;
+    classGroupVO.creationDate = savedEntity.creationDate;
 
     return classGroupVO;
   }
 
   @Put(':id')
-  async update(
-    @Param('id') id: string,
-    @Body(ValidationPipe) editClassDTO: EditClassDTO,
-  ): Promise<ClassGroupVO> {
+  async update( @Param('id') id: string, @Body(ValidationPipe) editClassDTO: EditClassDTO ): Promise<ClassGroupVO> {
     const findEntity = await this.classGroupService.findById(id);
 
     if (!findEntity) {
@@ -146,15 +144,15 @@ export class ClassGroupController {
 
     findEntity.className = editClassDTO.className;
     findEntity.classDescription = editClassDTO.classDescription;
-    findEntity.creationDate =new Date();
+    findEntity.creationDate = new Date();
 
     const updatedEntity = await this.classGroupService.update(findEntity);
     const classGroupVO = new ClassGroupVO();
 
-    classGroupVO.id= updatedEntity.id;
-    classGroupVO.className= updatedEntity.className;
-    classGroupVO.classDescription= updatedEntity.classDescription;
-    classGroupVO.creationDate= updatedEntity.creationDate;
+    classGroupVO.id = updatedEntity.id;
+    classGroupVO.className = updatedEntity.className;
+    classGroupVO.classDescription = updatedEntity.classDescription;
+    classGroupVO.creationDate = updatedEntity.creationDate;
 
     return classGroupVO;
   }

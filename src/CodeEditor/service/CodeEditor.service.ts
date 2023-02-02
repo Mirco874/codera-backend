@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { v4 } from 'uuid';
+
 import { FileService } from './Files.service';
 import { ShellService } from './Shell.service';
-import { v4 } from 'uuid';
+
 import { CompiledLanguageDTO } from '../dto/compiledLanguage.dto';
 import { InterpretedLanguageDTO } from '../dto/InterpretedLanguage.dto';
 
@@ -24,14 +26,13 @@ export class CodeEditorService {
     try {
       const commandResult = await this.shellService.excecuteCommand(command);
       return commandResult;
+
     } catch (error) {
       return error.message;
     }
   }
 
-  async InterpretJavaScript(
-    interpretedLanguageDTO: InterpretedLanguageDTO,
-  ): Promise<string> {
+  async InterpretJavaScript( interpretedLanguageDTO: InterpretedLanguageDTO ): Promise<string> {
     const { code } = interpretedLanguageDTO;
     const extention = 'js';
     const uuidCode = v4();
@@ -44,17 +45,17 @@ export class CodeEditorService {
       code,
       resultsFolder,
     );
+
     try {
       const commandResult = await this.shellService.excecuteCommand(command);
       return commandResult;
-    } catch (error) {
+    } 
+    catch (error) {
       return error.message;
     }
   }
 
-  async InterpretPython(
-    interpretedLanguageDTO: InterpretedLanguageDTO,
-  ): Promise<string> {
+  async InterpretPython( interpretedLanguageDTO: InterpretedLanguageDTO ): Promise<string> {
     const { code } = interpretedLanguageDTO;
     const extention = 'py';
     const uuidCode = v4();
@@ -67,7 +68,8 @@ export class CodeEditorService {
     try {
       const commandResult = await this.shellService.excecuteCommand(command);
       return commandResult;
-    } catch (error) {
+    } 
+    catch (error) {
       return error.message;
     }
   }

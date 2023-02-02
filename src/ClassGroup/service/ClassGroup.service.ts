@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ClassGroup } from '../entities/ClassGroup.entity';
-import { CreateClassDTO } from '../dto/CreateClass.dto';
 import { v4 } from 'uuid';
+import { ClassGroup } from '../entities/ClassGroup.entity';
 import { UserService } from 'src/User/service/User.service';
+import { CreateClassDTO } from '../dto/CreateClass.dto';
 
 @Injectable()
 export class ClassGroupService {
@@ -14,7 +14,7 @@ export class ClassGroupService {
     private userService: UserService,
   ) {}
 
-  findById(id: string): Promise<ClassGroup> {
+  findById( id: string ): Promise<ClassGroup> {
     return this.classGroupRepository
     .createQueryBuilder('ClassGroup')
     .innerJoinAndSelect('ClassGroup.teacher', 'user')
@@ -22,7 +22,7 @@ export class ClassGroupService {
     .getOne();
   }
 
-  async findByUserId(id: number): Promise<ClassGroup[]> {
+  async findByUserId( id: number ): Promise<ClassGroup[]> {
     return this.classGroupRepository
       .createQueryBuilder('ClassGroup')
       .innerJoinAndSelect('ClassGroup.userClass', 'UserClass')
@@ -32,7 +32,7 @@ export class ClassGroupService {
       .getMany();
   }
 
-  persist(createClassDTO: CreateClassDTO): Promise<ClassGroup> {
+  persist( createClassDTO: CreateClassDTO ): Promise<ClassGroup> {
     const entity = new ClassGroup();
 
     entity.id = v4();
@@ -44,7 +44,7 @@ export class ClassGroupService {
     return this.classGroupRepository.save(entity);
   }
 
-  update(entity: ClassGroup): Promise<ClassGroup> {
+  update( entity: ClassGroup ): Promise<ClassGroup> {
     return this.classGroupRepository.save(entity);
   }
 }

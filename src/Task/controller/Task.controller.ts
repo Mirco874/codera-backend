@@ -8,20 +8,23 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { UseGuards } from '@nestjs/common/decorators';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { ValidationPipe } from '@nestjs/common/pipes';
+import { UseGuards } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { ClassGroupService } from 'src/ClassGroup/service/ClassGroup.service';
-import { ProgrammingLanguageVO } from 'src/ProgrammingLanguage/vo/ProgrammingLanguage.vo';
-import { User } from 'src/User/entities/User.entity';
+
 import { GetUser } from 'src/User/service/GetUser';
+import { User } from 'src/User/entities/User.entity';
+
+import { TaskService } from '../service/Task.service';
+import { ClassGroupService } from 'src/ClassGroup/service/ClassGroup.service';
+
 import { CreateTaskDTO } from '../dto/CreateTask.dto';
 import { EditTaskDTO } from '../dto/EditTask.dto';
-import { TaskService } from '../service/Task.service';
+
 import { TaskBasicInformationVO } from '../vo/taskBasicInformation.vo';
 import { TaskDetailInformationVO } from '../vo/taskDetailInformation.vo';
-
+import { ProgrammingLanguageVO } from 'src/ProgrammingLanguage/vo/ProgrammingLanguage.vo';
 
 @Controller('api/v1/tasks/')
 @UseGuards(JwtAuthGuard)
@@ -32,10 +35,7 @@ export class TaskController {
   ) {}
 
   @Get('/todo')
-  async findTaskPendingTasks(
-    @Query('classId') classId: string,
-    @GetUser() user:User
-  ): Promise<TaskBasicInformationVO[]> {
+  async findTaskPendingTasks( @Query('classId') classId: string, @GetUser() user:User ): Promise<TaskBasicInformationVO[]> {
     const findClassGroup = await this.classGroupService.findById(classId);
 
     if (!findClassGroup) {
@@ -46,7 +46,6 @@ export class TaskController {
 
     const entityList = await this.taskService.findToDoTask(user.id, classId);
     const voList: TaskBasicInformationVO[] = [];
-
 
     entityList.map((entity) => {
       const vo = new TaskBasicInformationVO();
@@ -104,9 +103,7 @@ export class TaskController {
   }
 
   @Get()
-  async findByClassGroupId(
-    @Query('classGroupId') classGroupId: string,
-  ): Promise<TaskBasicInformationVO[]> {
+  async findByClassGroupId( @Query('classGroupId') classGroupId: string ): Promise<TaskBasicInformationVO[]> {
     const findClassGroup = await this.classGroupService.findById(classGroupId);
 
     if (!findClassGroup) {
@@ -146,9 +143,7 @@ export class TaskController {
   }
 
   @Post()
-  async persist(
-    @Body(ValidationPipe) createTaskDTO: CreateTaskDTO,
-  ): Promise<TaskDetailInformationVO> {
+  async persist( @Body(ValidationPipe) createTaskDTO: CreateTaskDTO ): Promise<TaskDetailInformationVO> {
     createTaskDTO.limitDate= new Date(createTaskDTO.limitDate);
     
     const findClass = await this.classGroupService.findById(
@@ -173,10 +168,7 @@ export class TaskController {
   }
 
   @Put(':id')
-  async update(
-    @Param('id') id: number,
-    @Body(ValidationPipe) editTaskDTO: EditTaskDTO,
-  ): Promise<void> {
+  async update( @Param('id') id: number, @Body(ValidationPipe) editTaskDTO: EditTaskDTO ): Promise<void> {
     const findEntity = await this.taskService.findById(id);
 
     if (!findEntity) {
@@ -189,6 +181,7 @@ export class TaskController {
 
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<void> {
+    
     const findEntity = await this.taskService.findById(id);
     if (!findEntity) {
       throw new NotFoundException(`There is not a task with id: ${id}`);

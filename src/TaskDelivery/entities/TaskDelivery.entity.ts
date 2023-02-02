@@ -1,7 +1,3 @@
-import { DeliveryComment } from 'src/DeliveryComment/entities/DeliveryComment.entity';
-import { ProgrammingLanguage } from 'src/ProgrammingLanguage/entities/ProgrammingLanguage.entity';
-import { Task } from 'src/Task/entities/Task.entity';
-import { User } from 'src/User/entities/User.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,9 +6,14 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
+import { DeliveryComment } from 'src/DeliveryComment/entities/DeliveryComment.entity';
+import { ProgrammingLanguage } from 'src/ProgrammingLanguage/entities/ProgrammingLanguage.entity';
+import { Task } from 'src/Task/entities/Task.entity';
+import { User } from 'src/User/entities/User.entity';
 
 @Entity({ name: 'task_delivery' })
 export class TaskDelivery {
+
   @PrimaryGeneratedColumn()
   id: number;
 

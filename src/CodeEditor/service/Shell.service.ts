@@ -7,6 +7,7 @@ export class ShellService {
   async excecuteCommand(command: string): Promise<string> {
 
     const output = new Promise<string>((resolve, reject) => {
+
       child_process.exec(command, async (err, stdout) => {
         if (err) {
           reject(err);
@@ -17,5 +18,4 @@ export class ShellService {
 
     return output;
   }
-
 }

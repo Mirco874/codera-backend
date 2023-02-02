@@ -6,12 +6,15 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common/pipes';
+
+import { User } from './User/entities/User.entity';
+
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
+import { UserService } from './User/service/User.service';
+
 import { LoginUserDTO } from './auth/dto/loginUser.dto';
 import { CreateUserDTO } from './User/dto/CreateUser.dto';
-import { User } from './User/entities/User.entity';
-import { UserService } from './User/service/User.service';
 
 @Controller('/api/v1/')
 export class AppController {
@@ -27,7 +30,7 @@ export class AppController {
   }
 
   @Post('auth/login')
-  async login(@Body() loginUserDTO: LoginUserDTO) {
+  async login( @Body() loginUserDTO: LoginUserDTO ) {
     return this.authService.login(loginUserDTO);
   }
 
@@ -51,6 +54,4 @@ export class AppController {
 
     return this.authService.registerUser(createUserDTO);
   }
-
-
 }

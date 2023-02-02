@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ClassGroup } from 'src/ClassGroup/entities/ClassGroup.entity';
 import { Repository } from 'typeorm';
-import { SubscribeUserDTO } from '../dto/SubscribeUser.dto';
+
 import { UserClass } from '../entities/UserClass.entity';
+import { ClassGroup } from 'src/ClassGroup/entities/ClassGroup.entity';
+
+import { SubscribeUserDTO } from '../dto/SubscribeUser.dto';
 
 @Injectable()
 export class UserClassService {
@@ -12,19 +14,19 @@ export class UserClassService {
     private userClassRepository: Repository<UserClass>,
   ) {}
 
-  async findSubscriptionsByUserId(id:number):Promise<void>{
-    const userClasses=await this.userClassRepository.createQueryBuilder('UserClass')
-    .select('ClassGroup.id')
-    .innerJoin(ClassGroup,'ClassGroup','UserClass.classId=ClassGroup.id')
-    .where('UserClass.userId=:userId',{userId:id})
-    .getMany();
-    console.log(userClasses);
+  async findSubscriptionsByUserId(id: number): Promise<void> {
+    await this.userClassRepository
+      .createQueryBuilder('UserClass')
+      .select('ClassGroup.id')
+      .innerJoin(ClassGroup, 'ClassGroup', 'UserClass.classId=ClassGroup.id')
+      .where('UserClass.userId=:userId', { userId: id })
+      .getMany();
   }
 
   persist(suscribeUserDTO: SubscribeUserDTO): Promise<UserClass> {
     const entity = new UserClass();
-    entity.userId=(suscribeUserDTO.userId);
-    entity.classId=(suscribeUserDTO.classId);
+    entity.userId = suscribeUserDTO.userId;
+    entity.classId = suscribeUserDTO.classId;
     return this.userClassRepository.save(entity);
   }
 

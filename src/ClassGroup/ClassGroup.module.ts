@@ -1,20 +1,27 @@
-import { Module } from "@nestjs/common";
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from "src/User/User.module";
-import { ClassGroupController } from "./controller/ClassGroup.controller";
-import { ClassGroup } from "./entities/ClassGroup.entity";
-import { ClassGroupService } from "./service/ClassGroup.service";
-import { ClassFormValidatorService } from "./service/ClassFormValidator.service";
-import { UserClassModule } from "src/UserClass/UserClass.module";
-import { AuthModule } from "src/auth/auth.module";
-import { forwardRef } from "@nestjs/common/utils";
+import { forwardRef } from '@nestjs/common/utils';
+
+import { UserModule } from 'src/User/User.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { UserClassModule } from 'src/UserClass/UserClass.module';
+
+import { ClassGroupController } from './controller/ClassGroup.controller';
+
+import { ClassGroup } from './entities/ClassGroup.entity';
+
+import { ClassGroupService } from './service/ClassGroup.service';
+import { ClassFormValidatorService } from './service/ClassFormValidator.service';
 
 @Module({
-    imports:[TypeOrmModule.forFeature([ClassGroup]),UserModule, forwardRef(() => UserClassModule), AuthModule ],
-    providers:[ClassGroupService,ClassFormValidatorService],
-    controllers:[ClassGroupController],
-    exports:[ClassGroupService]
+  imports: [
+    TypeOrmModule.forFeature([ClassGroup]),
+    UserModule,
+    forwardRef(() => UserClassModule),
+    AuthModule,
+  ],
+  providers: [ClassGroupService, ClassFormValidatorService],
+  controllers: [ClassGroupController],
+  exports: [ClassGroupService],
 })
-
-
-export class ClassGroupModule{}
+export class ClassGroupModule {}

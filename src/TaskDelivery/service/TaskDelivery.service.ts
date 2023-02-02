@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { createTaskDeliveryDTO } from '../dto/createTaskDelivery.dto';
 import { TaskDelivery } from '../entities/TaskDelivery.entity';
+import { createTaskDeliveryDTO } from '../dto/createTaskDelivery.dto';
 
 @Injectable()
 export class TaskDeliveryService {
@@ -66,7 +66,6 @@ export class TaskDeliveryService {
 
     entity.score = null;
     entity.deliveryDate = new Date();
-
 
     this.taskDeliveryRepository.save(entity);
   }

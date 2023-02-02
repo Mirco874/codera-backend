@@ -1,18 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
 import { UserModule } from './User/User.module';
 import { AuthModule } from './auth/auth.module';
-import { ClassGroupModule } from './ClassGroup/ClassGroup.module';
-import { UserClassModule } from './UserClass/UserClass.module';
 import { TaskModule } from './Task/Task.module';
-import { ProgramminLanguageModule } from './ProgrammingLanguage/ProgrammingLanguage.module';
+import { UserClassModule } from './UserClass/UserClass.module';
+import { ClassGroupModule } from './ClassGroup/ClassGroup.module';
+import { CodeEditorModule } from './CodeEditor/CodeEditor.module';
 import { TaskLanguageModule } from './TaskLanguage/TaskLanguage.module';
 import { TaskDeliveryModule } from './TaskDelivery/TaskDelivery.module';
 import { DeliveryCommentModule } from './DeliveryComment/DeliveryComment.module';
-import { CodeEditorModule } from './CodeEditor/CodeEditor.module';
+import { ProgramminLanguageModule } from './ProgrammingLanguage/ProgrammingLanguage.module';
 
 @Module({
   imports: [
@@ -36,7 +38,7 @@ import { CodeEditorModule } from './CodeEditor/CodeEditor.module';
     TaskLanguageModule,
     TaskDeliveryModule,
     DeliveryCommentModule,
-    CodeEditorModule
+    CodeEditorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

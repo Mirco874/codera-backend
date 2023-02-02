@@ -1,36 +1,46 @@
 import {
-  Controller,
-  Get,
-  Query,
+  Body, 
+  Controller, 
+  Delete, 
+  Get, 
+  Param, 
+  Patch, 
   Post,
-  Put,
-  Delete,
-  Param,
-  Body,
-  Patch,
+  Put, 
+  Query
 } from '@nestjs/common';
-import { Inject, UseGuards } from '@nestjs/common/decorators';
+
 import {
   BadRequestException,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common/exceptions';
-import { ValidationPipe } from '@nestjs/common/pipes';
+
+import { 
+  Inject, 
+  UseGuards 
+} from '@nestjs/common/decorators';
+
 import { forwardRef } from '@nestjs/common/utils';
+import { ValidationPipe } from '@nestjs/common/pipes';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { ClassGroupService } from 'src/ClassGroup/service/ClassGroup.service';
-import { ProgrammingLanguageVO } from 'src/ProgrammingLanguage/vo/ProgrammingLanguage.vo';
-import { TaskService } from 'src/Task/service/Task.service';
-import { TaskBasicInformationVO } from 'src/Task/vo/taskBasicInformation.vo';
-import { TaskDetailInformationVO } from 'src/Task/vo/taskDetailInformation.vo';
-import { User } from 'src/User/entities/User.entity';
 import { GetUser } from 'src/User/service/GetUser';
+
+import { User } from 'src/User/entities/User.entity';
+import { TaskDelivery } from '../entities/TaskDelivery.entity';
+
 import { UserService } from 'src/User/service/User.service';
-import { UserVO } from 'src/User/vo/User.vo';
+import { TaskService } from 'src/Task/service/Task.service';
+import { TaskDeliveryService } from '../service/TaskDelivery.service';
+import { ClassGroupService } from 'src/ClassGroup/service/ClassGroup.service';
+
 import { createTaskDeliveryDTO } from '../dto/createTaskDelivery.dto';
 import { UpdateScoreDTO } from '../dto/UpdateScore.dto';
 import { UpdateTaskDeliveryDTO } from '../dto/UpdateTaskDelivery.dto';
-import { TaskDelivery } from '../entities/TaskDelivery.entity';
-import { TaskDeliveryService } from '../service/TaskDelivery.service';
+
+import { UserVO } from 'src/User/vo/User.vo';
+import { ProgrammingLanguageVO } from 'src/ProgrammingLanguage/vo/ProgrammingLanguage.vo';
+import { TaskBasicInformationVO } from 'src/Task/vo/taskBasicInformation.vo';
+import { TaskDetailInformationVO } from 'src/Task/vo/taskDetailInformation.vo';
 import { TaskDeliveryBasicInformationVO } from '../vo/TaskDeliveryBasicInformation.vo';
 import { TaskDeliveryDetailInformationVO } from '../vo/TaskDeliveryDetailInformationVO.vo';
 
@@ -51,6 +61,7 @@ export class TaskDeliveryController {
     @Query('taskId') taskId: number,
     @Query('classId') classId: string,
   ): Promise<TaskDeliveryBasicInformationVO[]> {
+
     let taskDeliveriesVO: TaskDeliveryBasicInformationVO[] = [];
     let entityList: TaskDelivery[] = [];
 
@@ -105,16 +116,14 @@ export class TaskDeliveryController {
   }
 
   @Get(':id')
-  async findById(
-    @Param('id') id: number,
-  ): Promise<TaskDeliveryDetailInformationVO> {
+  async findById( @Param('id') id: number ): Promise<TaskDeliveryDetailInformationVO> {
     const findEntity = await this.taskDeliveryService.findById(id);
     if (!findEntity) {
       throw new NotFoundException(
         `There is not a task delivery with id: ${id}`,
       );
     }
-    console.log(findEntity);
+
     const taskDeliveryVO = new TaskDeliveryDetailInformationVO();
 
     const userVO = new UserVO();
@@ -154,10 +163,7 @@ export class TaskDeliveryController {
   }
 
   @Put(':id')
-  async update(
-    @Param('id') id: number,
-    @Body() updateTaskDeliveryDTO: UpdateTaskDeliveryDTO,
-  ): Promise<TaskDeliveryDetailInformationVO> {
+  async update( @Param('id') id: number, @Body() updateTaskDeliveryDTO: UpdateTaskDeliveryDTO ): Promise<TaskDeliveryDetailInformationVO> {
     const findEntity = await this.taskDeliveryService.findById(id);
     findEntity.languageId = updateTaskDeliveryDTO.languageId;
     findEntity.code = updateTaskDeliveryDTO.code;
@@ -199,10 +205,7 @@ export class TaskDeliveryController {
   }
 
   @Patch(':id/update-score')
-  async updateScore(
-    @Param('id') id: number,
-    @Body(ValidationPipe) updateScoreDTO: UpdateScoreDTO,
-  ) {
+  async updateScore( @Param('id') id: number, @Body(ValidationPipe) updateScoreDTO: UpdateScoreDTO ) {
     const findEntity = await this.taskDeliveryService.findById(id);
 
     if (!findEntity) {
@@ -245,7 +248,6 @@ export class TaskDeliveryController {
     taskVO.maxScore = updatedEntity.task.maxScore;
     taskVO.limitDate = updatedEntity.task.limitDate;
 
-
     taskDeliveryVO.id = updatedEntity.id;
     taskDeliveryVO.user = userVO;
     taskDeliveryVO.task = taskVO;
@@ -259,7 +261,6 @@ export class TaskDeliveryController {
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<void> {
     const findEntity = await this.taskDeliveryService.findById(id);
-
     this.taskDeliveryService.removeOne(findEntity);
   }
 }

@@ -2,12 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common/decorators';
 import { forwardRef } from '@nestjs/common/utils';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Task } from '../entities/Task.entity';
+
 import { TaskDeliveryService } from 'src/TaskDelivery/service/TaskDelivery.service';
 import { TaskLanguageService } from 'src/TaskLanguage/service/TaskLanguage.service';
-import { Repository } from 'typeorm';
+
 import { CreateTaskDTO } from '../dto/CreateTask.dto';
 import { EditTaskDTO } from '../dto/EditTask.dto';
-import { Task } from '../entities/Task.entity';
+
 
 @Injectable()
 export class TaskService {

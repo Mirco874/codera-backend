@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { changePhotoDTO } from '../dto/ChangePhoto.dto';
 import { ChangeUserInformationDTO } from '../dto/ChangeUserInformation.dto';
 import { CreateUserDTO } from '../dto/CreateUser.dto';
+
 @Injectable()
 export class UserFormValidatorService {
   constructor() {}
@@ -19,8 +20,7 @@ export class UserFormValidatorService {
   }
 
   correctChangeInformationDTO(changeInformationDTO: ChangeUserInformationDTO) {
-    return this.validString(changeInformationDTO.fullName)
-
+    return this.validString(changeInformationDTO.fullName);
   }
 
   validString(word: string): boolean {
